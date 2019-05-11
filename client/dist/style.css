@@ -1,0 +1,26 @@
+html {
+    font-family: Montserrat, Akronim, sans-serif;
+    font-size: 10px;
+}
+
+
+ul,ol,dl,p {
+    font-size: 1.5rem;
+    color: darkolivegreen;
+}
+  
+#username{
+    background-color:pink;
+    color:darkmagenta
+}
+
+
+#item_link{
+    background-color:grey;
+    color:beige
+}
+
+
+section {
+    display: flex;
+  }

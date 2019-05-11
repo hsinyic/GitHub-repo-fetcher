@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const git = require('../helpers/github.js')
+const db = require('../database/index.js')
 let app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
@@ -18,15 +19,24 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.post('/repos', function (req, res) {
   git.getReposByUsername(req.body.term, (err, data) => {
     if (err) {
-      res.sendStatus(500).send(err.toString());
+      res.send(JSON.stringify(err));
+      // res.status(500)
     } else {
-      res.send(data);
+      res.send(JSON.stringify(data));
     }
   });
 
 });
 
 app.get('/repos', function (req, res) {
+  db.grab((err, data)=>{
+    if (err) {
+      res.send(JSON.stringify(err));
+      // res.status(500)
+    } else {
+      res.send(JSON.stringify(data));
+    }
+  })
   // TODO - your code here!
   // This route should send back the top 25 repos
 });

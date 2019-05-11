@@ -6,14 +6,14 @@ const Promise = require('bluebird')
 let repoSchema = mongoose.Schema({
   stargazers_count: Number,
   owner_login: String,
-  html_url: String,
+  html_url: { type: String, unique: true },
   forks: Number,
-  description: String
+  description: String,
+  name: String
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
 let save = (data, cb) => {
-  console.log('what')
   var promiseSave = [];
   for (var k = 0; k < data.length; k++) {
     var obj = data[k];
@@ -22,31 +22,32 @@ let save = (data, cb) => {
       owner_login: obj.owner.login,
       html_url: obj.html_url,
       forks: obj.fork,
-      description: obj.description
+      description: obj.description,
+      name: obj.name
     });
     promiseSave.push(newuser.save());
   }
-  console.log(promiseSave)
-  Promise.all(promiseSave).then((err, data) => {
-    if (err) {
-      cb(err, null);
-    } else {
-      cb(null, data);
-    }
+  Promise.all(promiseSave).then((data) => {
+    cb(null, data);
+  }).catch((err) => {
+    cb(err, null);
+  });
+}
+
+let grab = (cb) => {
+  var top25repos = Repo.find({}).limit(50).sort({ stargazers_count: -1 });
+  var top25reposAsync = top25repos.exec();
+  top25reposAsync.then((data) => {
+    console.log('got data')
+    console.log(data);
+    cb(null, data);
+  }).catch(err => {
+    cb(err, null);
   })
 }
 
-save(sampleData, (err, data) => {
-  if (err) {
-    // console.log(err);
-  } else {
-    // console.log('hiiii');
-  }
-})
-
-
 module.exports.save = save;
-
+module.exports.grab = grab;
 
 
 

@@ -7,7 +7,7 @@ let getReposByUsername = (username, cb) => {
 
   // The options object has been provided to help you out, 
   // but you'll have to fill in the URL
-  var url = 'https://api.github.com/repositories?user:' + username + '+sort=stars' + '+max=50'
+  var url = 'https://api.github.com/users/' + username + '/repos'
   let options = {
     url: url,
     headers: {
@@ -16,11 +16,16 @@ let getReposByUsername = (username, cb) => {
     }
   };
   function callback(error, response, body) {
-    if (error) {
-      cb(error, null);
+    // console.log('error = ', JSON.parse(body).message); // if valid username, error === null 
+    if (JSON.parse(body).message) {
+      cb(JSON.parse(body).message, null);
     } else if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-      database.save(info, cb);
+      return new Promise((resolve, reject)=>{
+        resolve(JSON.parse(body));
+      })
+      .then(info => {
+        database.save(info, cb);})
+      .catch(err=> {cb(err, null)})
     }
   }
   request.get(options, callback);
@@ -28,3 +33,10 @@ let getReposByUsername = (username, cb) => {
 }
 
 module.exports.getReposByUsername = getReposByUsername;
+
+
+
+
+// code line 1
+// code line 2
+// javascript try catch
