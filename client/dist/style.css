@@ -24,5 +24,12 @@ ul,ol,dl,p {
 section {
     display: grid;
     grid-template-columns: 20px 600px;
+    justify-content: center;
 }
-  
+
+
+img {
+    max-width:100%;
+    line-height: 1.5;
+
+}

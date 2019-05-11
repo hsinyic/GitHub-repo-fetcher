@@ -2,7 +2,7 @@ import React from 'react';
 
 const RepoList = (props) => {
   var list = props.repos.map((item, idx) => {
-    var avatar = 'https://github.com/' + item.owner_login + '.png?size=30'
+    var avatar = 'https://github.com/' + item.owner_login + '.png?size=50'
     return (
       <div className='repoList' key={idx.toString()}>
           <section>
