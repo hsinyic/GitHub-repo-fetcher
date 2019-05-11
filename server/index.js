@@ -1,7 +1,14 @@
 const express = require('express');
+const bodyParse = require('body-parser');
 let app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json({ type: 'application/*+json' }))
+// parse some custom thing into a Buffer
+app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }))
+// parse an HTML body into a string
+app.use(bodyParser.text({ type: 'text/html' }))
 
 app.post('/repos', function (req, res) {
   // TODO - your code here!

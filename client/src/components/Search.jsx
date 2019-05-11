@@ -6,6 +6,10 @@ class Search extends React.Component {
     this.state = {
       term: ''
     }
+    this.onChange = this.onChange.bind(this)
+    this.search = this.search.bind(this)
+    // if this.search is not bind to Search it will not have a "this" connected to class
+    // Search. It NEEDS to be connected to class Search to inherit the props that has onSearch
   }
 
   onChange (e) {
@@ -16,6 +20,7 @@ class Search extends React.Component {
 
   search() {
     this.props.onSearch(this.state.term);
+
   }
 
   render() {
