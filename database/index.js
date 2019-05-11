@@ -1,52 +1,52 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 const sampleData = require('../data.json');
-
-// console.log(sampleData[0]);
+const Promise = require('bluebird')
 
 let repoSchema = mongoose.Schema({
-  id: Number,
+  stargazers_count: Number,
   owner_login: String,
-  owner_id: Number,
   html_url: String,
   forks: Number,
   description: String
 });
 
-
-
 let Repo = mongoose.model('Repo', repoSchema);
-
-let save = (arrObj) => {
-  for (const k in arrObj) {
-    let obj = arrObj[k];
-    let puppy = new Repo({
-      id: obj.id,
+let save = (data, cb) => {
+  console.log('what')
+  var promiseSave = [];
+  for (var k = 0; k < data.length; k++) {
+    var obj = data[k];
+    var newuser = new Repo({
+      stargazers_count: obj.stargazers_count,
       owner_login: obj.owner.login,
-      owner_id: obj.owner.owner_id,
       html_url: obj.html_url,
       forks: obj.fork,
       description: obj.description
     });
-  
-    puppy.save().then(() => {
-      console.log(puppy);
-    }).catch(e=>{
-      console.log(e);
-    })
+    promiseSave.push(newuser.save());
   }
-
+  console.log(promiseSave)
+  Promise.all(promiseSave).then((err, data) => {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, data);
+    }
+  })
 }
-// example script to save the data to MongoDB
-save(sampleData.slice(0,25));
+
+save(sampleData, (err, data) => {
+  if (err) {
+    // console.log(err);
+  } else {
+    // console.log('hiiii');
+  }
+})
 
 
 module.exports.save = save;
 
-Repo.find(function (err, kittens) {
-  if (err) return console.error(err);
-  console.log(kittens);
-})
 
 
 
@@ -79,6 +79,10 @@ Repo.find(function (err, kittens) {
 
 
 
+// Repo.find(function (err, kittens) {
+//   //   if (err) return console.error(err);
+//   //   console.log(kittens);
+//   // })
 
 
 
