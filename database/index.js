@@ -13,7 +13,7 @@ let repoSchema = mongoose.Schema({
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
-let save = (data, cb) => {
+let write2Mongoose = (data, cb) => {
   var promiseSave = [];
   for (var k = 0; k < data.length; k++) {
     var obj = data[k];
@@ -25,9 +25,10 @@ let save = (data, cb) => {
       description: obj.description,
       name: obj.name
     });
-    promiseSave.push(newuser.save());
+    promiseSave.push(newuser.save());  
   }
-  Promise.all(promiseSave).then((data) => {
+  Promise.all(promiseSave)
+  .then((data) => {
     cb(null, data);
   }).catch((err) => {
     cb(err, null);
@@ -35,62 +36,16 @@ let save = (data, cb) => {
 }
 
 let grab = (cb) => {
-  var top25repos = Repo.find({}).limit(50).sort({ stargazers_count: -1 });
-  var top25reposAsync = top25repos.exec();
-  top25reposAsync.then((data) => {
-    console.log('got data')
-    console.log(data);
+  var top25repos = Repo.find({}).limit(50).sort({ stargazers_count: -1 }).exec();
+  top25repos.then((data) => {
     cb(null, data);
   }).catch(err => {
     cb(err, null);
   })
 }
 
-module.exports.save = save;
+module.exports.save = write2Mongoose;
 module.exports.grab = grab;
-
-
-
-
-
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function () {
-// });
-
-// mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
-
-// const Cat = mongoose.model('Cat', { name: String });
-
-// const kitty = new Cat({ name: 'Zildjian' });
-// kitty.save().then(() => console.log(kitty.name));
-
-// const kitty2 = new Cat({ name: 'kitty2' });
-// kitty2.save().then(() => console.log(kitty2.name));
-
-// const kitty3 = new Cat({ name: 'kitty3' });
-// kitty3.save().then(() => console.log(kitty3.name));
-
-
-
-// Cat.find(function (err, kittens) {
-//   if (err) return console.error(err);
-//   console.log(kittens);
-// })
-
-
-
-// Repo.find(function (err, kittens) {
-//   //   if (err) return console.error(err);
-//   //   console.log(kittens);
-//   // })
-
-
-
-
-
-
-
 
 
 

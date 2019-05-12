@@ -17,10 +17,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 
 app.post('/repos', function (req, res) {
+  
   git.getReposByUsername(req.body.term, (err, data) => {
+    res.header("Access-Control-Allow-Origin", "*");
     if (err) {
-      res.send(JSON.stringify(err));
-      // res.status(500)
+      // res.send(JSON.stringify(err));
+      res.status(500)
     } else {
       res.send(JSON.stringify(data));
     }
@@ -30,6 +32,7 @@ app.post('/repos', function (req, res) {
 
 app.get('/repos', function (req, res) {
   db.grab((err, data)=>{
+    res.header("Access-Control-Allow-Origin", "*");
     if (err) {
       res.send(JSON.stringify(err));
       // res.status(500)
