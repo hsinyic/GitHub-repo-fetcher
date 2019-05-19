@@ -14,39 +14,47 @@ app.use(express.static(__dirname + '/../client/dist'));
 // app.use(bodyParser.text({ type: 'text/html' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
-
-
-app.post('/repos', function (req, res) {
-  
-  git.getReposByUsername(req.body.term, (err, data) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    if (err) {
-      // res.send(JSON.stringify(err));
-      res.status(500)
-    } else {
-      res.send(JSON.stringify(data));
-    }
-  });
-
+app.post('/repos', function(req, res) {
+    git.getReposByUsername(req.body.term, (err, data) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        if (err) {
+            // res.send(JSON.stringify(err));
+            res.status(500).send();
+        } else {
+            res.send(JSON.stringify(data));
+        }
+    });
 });
 
-app.get('/repos', function (req, res) {
-  db.grab((err, data)=>{
-    res.header("Access-Control-Allow-Origin", "*");
-    if (err) {
-      res.send(JSON.stringify(err));
-      // res.status(500)
-    } else {
-      res.send(JSON.stringify(data));
-    }
-  })
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+app.get('/repos', function(req, res) {
+    db.grab((err, data) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        if (err) {
+            res.send(JSON.stringify(err));
+            // res.status(500)
+        } else {
+            res.send(JSON.stringify(data));
+        }
+    })
 });
+
+
+app.get('/users', function(req, res) {
+    db.getUserRepos(req.body.user, (err, data) => {
+        res.header("Access-Control-Allow-Origin", "*");
+        if (err) {
+            res.send(JSON.stringify(err));
+            // res.status(500)
+        } else {
+            res.send(JSON.stringify(data));
+        }
+    })
+});
+
+
 
 let port = 1128;
 
-app.listen(port, function () {
-  console.log(`listening on port ${port}`);
+app.listen(port, function() {
+    console.log(`listening on port ${port}`);
 });
-

@@ -25,7 +25,6 @@ class App extends React.Component {
       method: 'POST',
       data: { term: term },
       url: 'http://127.0.0.1:1128/repos',
-      
       // index.html:1 Access to XMLHttpRequest at 'http://localhost:1128/repos' from origin 'null' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
       success: res => {
         // this.componentDidMount();
